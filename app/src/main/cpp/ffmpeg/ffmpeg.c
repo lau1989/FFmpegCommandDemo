@@ -631,6 +631,16 @@ static void ffmpeg_cleanup(int ret)
     }
     term_exit();
     ffmpeg_exited = 1;
+
+
+
+//    ================ lau start========================
+    nb_filtergraphs = 0;
+    nb_output_files = 0;
+    nb_output_streams = 0;
+    nb_input_files = 0;
+    nb_input_streams = 0;
+//    ================ end start========================
 }
 
 void remove_avoptions(AVDictionary **a, AVDictionary *b)
@@ -1773,6 +1783,11 @@ static void print_report(int is_last_report, int64_t timer_start, int64_t cur_ti
 
     bitrate = pts && total_size >= 0 ? total_size * 8 / (pts / 1000.0) : -1;
     speed = t != 0.0 ? (double)pts / AV_TIME_BASE / t : -1;
+
+//    ====================lau start========================
+    float mss = secs + ((float) us / AV_TIME_BASE);
+//    ffmpeg_progress(mss);
+//    ====================lau end========================
 
     if (total_size < 0) av_bprintf(&buf, "size=N/A time=");
     else                av_bprintf(&buf, "size=%8.0fkB time=", total_size / 1024.0);
@@ -4843,7 +4858,8 @@ static void log_callback_null(void *ptr, int level, const char *fmt, va_list vl)
 {
 }
 
-int main(int argc, char **argv)
+//int main(int argc, char **argv)
+int ffmpeg_exec(int argc, char **argv)
 {
     int i, ret;
     BenchmarkTimeStamps ti;

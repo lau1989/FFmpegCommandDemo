@@ -35,8 +35,8 @@ add_library(
         ${APP_ROOT}/src/main/cpp/ffmpeg/ffmpeg_filter.c
         ${APP_ROOT}/src/main/cpp/ffmpeg/ffmpeg_opt.c
         ${APP_ROOT}/src/main/cpp/ffmpeg/ffmpeg_hw.c
-#        ${APP_ROOT}/src/main/cpp/ffmpeg_cmd.c
-#        ${APP_ROOT}/src/main/cpp/ffmpeg_thread.c
+        ${APP_ROOT}/src/main/cpp/ffmpeg_cmd.c
+        ${APP_ROOT}/src/main/cpp/ffmpeg_thread.c
 )
 
 add_library( # Sets the name of the library.
