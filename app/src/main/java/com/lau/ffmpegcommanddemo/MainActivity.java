@@ -63,11 +63,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public static void onExecuted(int ret) {
-
+        Log.i(TAG, "ffmpeg executed:" + ret);
     }
 
     public static void onProgress(float progress) {
-
+        Log.i(TAG, "ffmpeg onProgress:" + progress);
     }
 
     /**

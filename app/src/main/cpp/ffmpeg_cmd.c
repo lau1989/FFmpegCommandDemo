@@ -16,46 +16,42 @@ static jobject m_clazz = NULL;
 
 void callJavaMethod(JNIEnv *env, jclass clazz, int ret) {
     if (clazz == NULL) {
-//        LOGE("--------------------clazz isNULL-----------------------");
+        LOGE("--------------------clazz isNULL-----------------------");
         return;
     }
-
     jmethodID methodId = (*env)->GetStaticMethodID(env, clazz, "onExecuted", "(I)V");
-
     if (methodId == NULL) {
-//        LOGE("------------------methodID isNull---------------------");
+        LOGE("------------------methodID isNull---------------------");
         return;
     }
-
     (*env)->CallStaticVoidMethod(env, clazz, methodId, ret);
 }
 
-//void callJavaMethodProgress(JNIEnv *env, jclass clazz, float ret) {
-//    if (clazz == NULL) {
-////        LOGE("-------------clazz isNULL---------------");
-//        return;
-//    }
-//    jmethodID methodId = (*env)->GetStaticMethodID(env, clazz, "onProgress", "(F)V");
-//    if (methodId == NULL) {
-////        LOGE("-------------methodID isNULL---------------");
-//        return;
-//    }
-//    (*env)->CallStaticVoidMethod(env, clazz, methodId, ret);
-//}
+void callJavaMethodProgress(JNIEnv *env, jclass clazz, float ret) {
+    if (clazz == NULL) {
+        LOGE("-------------clazz isNULL---------------");
+        return;
+    }
+    jmethodID methodId = (*env)->GetStaticMethodID(env, clazz, "onProgress", "(F)V");
+    if (methodId == NULL) {
+        LOGE("-------------methodID isNULL---------------");
+        return;
+    }
+    (*env)->CallStaticVoidMethod(env, clazz, methodId, ret);
+}
 
 
 static void ffmpeg_callback(int ret) {
     JNIEnv *env;
     (*jvm)->AttachCurrentThread(jvm, (void **) &env, NULL);
     callJavaMethod(env, m_clazz, ret);
-
     (*jvm)->DetachCurrentThread(jvm);
 }
 
 void ffmpeg_progress(float progress) {
     JNIEnv *env;
     (*jvm)->AttachCurrentThread(jvm, (void **) &env, NULL);
-
+    callJavaMethodProgress(env, m_clazz, progress);
     (*jvm)->DetachCurrentThread(jvm);
 
 }
@@ -65,7 +61,6 @@ Java_com_lau_ffmpegcommanddemo_MainActivity_ffmpegExec(JNIEnv *env, jclass clazz
     (*env)->GetJavaVM(env, &jvm);
     m_clazz = (*env)->NewGlobalRef(env, clazz);
 
-    int i = 0;
     char **argv = NULL;
     jstring *strr = NULL;
     if (cmdline != NULL) {

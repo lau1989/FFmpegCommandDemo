@@ -105,6 +105,7 @@
 #include "cmdutils.h"
 
 #include "libavutil/avassert.h"
+#include "ffmpeg_cmd.h"
 
 const char program_name[] = "ffmpeg";
 const int program_birth_year = 2000;
@@ -1786,7 +1787,7 @@ static void print_report(int is_last_report, int64_t timer_start, int64_t cur_ti
 
 //    ====================lau start========================
     float mss = secs + ((float) us / AV_TIME_BASE);
-//    ffmpeg_progress(mss);
+    ffmpeg_progress(mss);
 //    ====================lau end========================
 
     if (total_size < 0) av_bprintf(&buf, "size=N/A time=");

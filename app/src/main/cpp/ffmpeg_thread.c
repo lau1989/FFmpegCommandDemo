@@ -8,7 +8,6 @@ int num = 0;
 
 
 void *thread(void *arg) {
-    LOGD("thread start run, argv num: %d", num);
     int result = ffmpeg_exec(num, argvs);
     ffmpeg_thread_exit(result);
     return ((void *) 0);
@@ -23,7 +22,6 @@ int ffmpeg_thread_run_cmd(int cmdnum, char **argv) {
         LOGE("can't create thread: %s ", strerror(temp));
         return 1;
     }
-    LOGD("create thread success");
     return 0;
 }
 
