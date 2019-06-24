@@ -1,14 +1,18 @@
 package com.lau.ffmpegcommanddemo;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
 
-public class MainActivity extends AppCompatActivity {
+import com.lau.ffmpegcommanddemo.videoselect.VideoSelectActivity;
+
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = "FFMPEG";
+    private static final int REQUEST_CODE_VIDEO = 0;
 
     // Used to load the 'native-lib' library on application startup.
     static {
@@ -16,20 +20,35 @@ public class MainActivity extends AppCompatActivity {
         System.loadLibrary("ffmpeg-cmd");
     }
 
+    /**
+     * A native method that is implemented by the 'native-lib' native library,
+     * which is packaged with this application.
+     */
+    public native String stringFromJNI();
+
+    public static native int ffmpegExec(int num, String[] cmdArr);
+
+    public static void onExecuted(int ret) {
+        Log.i(TAG, "ffmpeg executed:" + ret);
+    }
+
+    public static void onProgress(float progress) {
+        Log.i(TAG, "ffmpeg onProgress:" + progress);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+    }
 
-        // Example of a call to a native method
-        TextView tv = findViewById(R.id.sample_text);
-        tv.setText(stringFromJNI());
-        tv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                cropVideo("/mnt/sdcard/test.mp4", 2000, 5000);
-            }
-        });
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case REQUEST_CODE_VIDEO:
+                break;
+        }
     }
 
     public static void cropVideo(String videoPath, long startTime, long endTime) {
@@ -62,20 +81,13 @@ public class MainActivity extends AppCompatActivity {
         ffmpegExec(cmds.length, cmds);
     }
 
-    public static void onExecuted(int ret) {
-        Log.i(TAG, "ffmpeg executed:" + ret);
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.item_crop:
+//                cropVideo("/mnt/sdcard/test.mp4", 2000, 5000);
+                startActivityForResult(new Intent(this, VideoSelectActivity.class), REQUEST_CODE_VIDEO);
+                break;
+        }
     }
-
-    public static void onProgress(float progress) {
-        Log.i(TAG, "ffmpeg onProgress:" + progress);
-    }
-
-    /**
-     * A native method that is implemented by the 'native-lib' native library,
-     * which is packaged with this application.
-     */
-    public native String stringFromJNI();
-
-    public static native int ffmpegExec(int num, String[] cmdArr);
-
 }
