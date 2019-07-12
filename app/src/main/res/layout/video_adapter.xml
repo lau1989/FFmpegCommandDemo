@@ -13,18 +13,36 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@drawable/video_select_duration_bg_shape"
+        android:layout_alignBottom="@+id/cover_sdv"/>
+
+    <TextView
+        android:id="@+id/video_size_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/cover_sdv"
+        android:paddingTop="5dp"
+        android:paddingLeft="5dp"
+        android:paddingBottom="3dp"
+        android:textColor="#fff"
+        android:textSize="12sp"
+        tools:text="10M" />
+
     <TextView
         android:id="@+id/video_duration_tv"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignRight="@+id/cover_sdv"
         android:layout_alignBottom="@+id/cover_sdv"
-        android:background="@drawable/video_select_duration_bg_shape"
         android:gravity="right"
         android:paddingTop="5dp"
-        android:paddingRight="10dp"
-        android:paddingBottom="5dp"
+        android:paddingRight="5dp"
+        android:paddingBottom="3dp"
         android:textColor="#fff"
-        tools:text="10:00"/>
+        android:textSize="12sp"
+        tools:text="10:00" />
 
 </RelativeLayout>

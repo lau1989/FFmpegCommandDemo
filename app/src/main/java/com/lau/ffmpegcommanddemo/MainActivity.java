@@ -6,7 +6,9 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 
+import com.lau.ffmpegcommanddemo.videoselect.VideoItem;
 import com.lau.ffmpegcommanddemo.videoselect.VideoSelectActivity;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -36,58 +38,91 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Log.i(TAG, "ffmpeg onProgress:" + progress);
     }
 
+    private TextView mInputTv;
+    private TextView mOutputTv;
+
+    private VideoItem mInputVideoItem;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mInputTv = findViewById(R.id.input_tv);
+        mOutputTv = findViewById(R.id.output_tv);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if (data == null) {
+            return;
+        }
         switch (requestCode) {
             case REQUEST_CODE_VIDEO:
+                VideoItem videoItem = (VideoItem) data.getSerializableExtra(VideoSelectActivity.EXT_VIDEO);
+                initInputVideo(videoItem);
                 break;
         }
-    }
-
-    public static void cropVideo(String videoPath, long startTime, long endTime) {
-        long duration = endTime - startTime;
-        CmdList cmd = new CmdList();
-        cmd.append("ffmpeg");
-        cmd.append("-y");
-        cmd.append("-ss").append(startTime / 1000).append("-t").append(duration / 1000).append("-accurate_seek");
-        cmd.append("-i").append(videoPath);
-        cmd.append("-codec").append("copy").append(getSavePath());
-
-        execCmd(cmd, duration);
     }
 
     private static String getSavePath() {
         return "/mnt/sdcard/ffmpeg_save.mp4";
     }
 
-    private static void execCmd(CmdList cmd, long duration) {
+    private void initInputVideo(VideoItem videoItem) {
+        if (videoItem == null) {
+            return;
+        }
+        mInputVideoItem = videoItem;
+        mInputTv.setText("INPUT: " + videoItem.path);
+    }
+
+    private void initOutputPath(String outputPath) {
+        mOutputTv.setText("OUTPUT: " + outputPath);
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.btn_clear:
+                mInputVideoItem = null;
+                mInputTv.setText("INPUT:");
+                mOutputTv.setText("OUTPUT:");
+                break;
+            case R.id.item_crop:
+                if (mInputVideoItem == null) {
+                    startActivityForResult(new Intent(this, VideoSelectActivity.class), REQUEST_CODE_VIDEO);
+                } else {
+                    cropVideo(getSavePath(), mInputVideoItem.path, 2000, 5000);
+                    initOutputPath(getSavePath());
+                }
+                break;
+        }
+    }
+
+    private void cropVideo(String outputPath, String videoPath, long startTime, long endTime) {
+        long duration = endTime - startTime;
+        CmdList cmd = new CmdList();
+        cmd.append("ffmpeg");
+        cmd.append("-y");
+        cmd.append("-ss").append(startTime / 1000).append("-t").append(duration / 1000).append("-accurate_seek");
+        cmd.append("-i").append(videoPath);
+        cmd.append("-codec").append("copy").append(outputPath);
+
+        execCropCmd(cmd, duration);
+    }
+
+    private void execCropCmd(CmdList cmd, long duration) {
         String[] cmds = cmd.toArray(new String[cmd.size()]);
         String cmdLog = "";
         for (String ss : cmds) {
             cmdLog = cmdLog + " " + ss;
         }
         Log.i(TAG, "cmd:" + cmdLog);
-        exec(cmds, duration);
+        exec(cmds);
     }
 
-    public static void exec(String[] cmds, long duration) {
+    private void exec(String[] cmds) {
         ffmpegExec(cmds.length, cmds);
-    }
-
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.item_crop:
-//                cropVideo("/mnt/sdcard/test.mp4", 2000, 5000);
-                startActivityForResult(new Intent(this, VideoSelectActivity.class), REQUEST_CODE_VIDEO);
-                break;
-        }
     }
 }

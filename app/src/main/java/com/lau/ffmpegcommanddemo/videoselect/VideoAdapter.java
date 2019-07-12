@@ -9,6 +9,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.lau.ffmpegcommanddemo.R;
 import com.lau.ffmpegcommanddemo.fresco.FrescoManager;
 import com.lau.ffmpegcommanddemo.util.DensityUtil;
+import com.lau.ffmpegcommanddemo.util.FileUtil;
 
 public class VideoAdapter extends BaseQuickAdapter<VideoItem, BaseViewHolder> {
 
@@ -30,6 +31,7 @@ public class VideoAdapter extends BaseQuickAdapter<VideoItem, BaseViewHolder> {
         containerLayout.setLayoutParams(lp);
 
         helper.setText(R.id.video_duration_tv, getDuration(item.duration));
+        helper.setText(R.id.video_size_tv, FileUtil.formetFileSize(item.size));
 
     }
 
