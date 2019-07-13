@@ -1,4 +1,4 @@
-package com.lau.ffmpegcommanddemo.videoselect;
+package com.lau.ffmpegcommanddemo.resource;
 
 import android.content.ContentResolver;
 import android.content.Context;
@@ -6,6 +6,9 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+
+import com.lau.ffmpegcommanddemo.resource.pojo.AudioItem;
+import com.lau.ffmpegcommanddemo.resource.pojo.VideoItem;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -28,29 +31,50 @@ public enum ResourceScanManager {
 //            MediaStore.Video.Media.DATE_MODIFIED,    //modified
     };
 
-    private static final String[] STORE_AUDIO = {MediaStore.Audio.Media.DISPLAY_NAME,       //name
+    private static final String[] STORE_AUDIO = {
+            MediaStore.Audio.Media.DISPLAY_NAME,       //name
             MediaStore.Audio.Media.DATA,               //path
+            MediaStore.Audio.Media.SIZE,               //size
+            MediaStore.Audio.Media.DURATION,           //duration
             MediaStore.Audio.Media.DATE_MODIFIED,      //modified
-            MediaStore.Audio.Media.SIZE,                //size
     };
 
     public interface IVideoScanCompleteCallback {
         void scanComplete(ArrayList<VideoItem> videoList);
     }
 
-    private IVideoScanCompleteCallback mScanCallback;
+    public interface IAudioScanCompleteCallback {
+        void scanComplete(ArrayList<AudioItem> videoList);
+    }
+
+    private IVideoScanCompleteCallback mVideoScanCallback;
+    private IAudioScanCompleteCallback mAudioScanCallback;
     private boolean mDestroy = false;
 
-    public void setScanCallback(IVideoScanCompleteCallback scanCallback) {
-        mScanCallback = scanCallback;
+    public void setVideoScanCallback(IVideoScanCompleteCallback videoScanCallback) {
+        mVideoScanCallback = videoScanCallback;
     }
 
     public void onDestroy() {
         mDestroy = true;
     }
 
+    public void startScan(final Context context, final IAudioScanCompleteCallback callback) {
+        mAudioScanCallback = callback;
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                ContentResolver cr = context.getContentResolver();
+                ArrayList<AudioItem> audioItems = startAudioScan(cr);
+                if (callback != null) {
+                    callback.scanComplete(audioItems);
+                }
+            }
+        }).start();
+    }
+
     public void startScan(final Context context, final IVideoScanCompleteCallback callback) {
-        mScanCallback = callback;
+        mVideoScanCallback = callback;
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -86,6 +110,31 @@ public enum ResourceScanManager {
             }
         }
         return videoItems;
+    }
+
+    private ArrayList<AudioItem> startAudioScan(ContentResolver cr) {
+        Uri audioUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+        Cursor cursor = cr.query(audioUri, STORE_AUDIO, null, null, MediaStore.Audio.Media.DATE_MODIFIED);
+        ArrayList<AudioItem> audioItems = new ArrayList<>();
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                if (mDestroy) {
+                    return audioItems;
+                }
+                String name = cursor.getString(0);
+                String path = cursor.getString(1);
+                long size = cursor.getLong(2);
+                long duration = cursor.getLong(3);
+
+                if (!isFileExist(path)) {
+                    continue;
+                }
+
+                AudioItem item = new AudioItem(name, path, size, duration);
+                audioItems.add(item);
+            }
+        }
+        return audioItems;
     }
 
     private boolean isFileExist(String path) {

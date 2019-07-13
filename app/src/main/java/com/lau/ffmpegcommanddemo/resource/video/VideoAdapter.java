@@ -1,4 +1,4 @@
-package com.lau.ffmpegcommanddemo.videoselect;
+package com.lau.ffmpegcommanddemo.resource.video;
 
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
@@ -6,10 +6,12 @@ import android.widget.RelativeLayout;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.lau.ffmpegcommanddemo.FfmpegUtil;
 import com.lau.ffmpegcommanddemo.R;
 import com.lau.ffmpegcommanddemo.fresco.FrescoManager;
 import com.lau.ffmpegcommanddemo.util.DensityUtil;
 import com.lau.ffmpegcommanddemo.util.FileUtil;
+import com.lau.ffmpegcommanddemo.resource.pojo.VideoItem;
 
 public class VideoAdapter extends BaseQuickAdapter<VideoItem, BaseViewHolder> {
 
@@ -30,27 +32,9 @@ public class VideoAdapter extends BaseQuickAdapter<VideoItem, BaseViewHolder> {
         lp.height = ITEM_LEN;
         containerLayout.setLayoutParams(lp);
 
-        helper.setText(R.id.video_duration_tv, getDuration(item.duration));
+        helper.setText(R.id.video_duration_tv, FfmpegUtil.getDuration(item.duration));
         helper.setText(R.id.video_size_tv, FileUtil.formetFileSize(item.size));
 
-    }
-
-    private String getDuration(long duration) {
-        int sec = (int) (duration / 1000) % 60;
-        int min = (int) (duration / 1000) / 60;
-        StringBuilder sb = new StringBuilder();
-        if (min > 9) {
-            sb.append(min);
-        } else {
-            sb.append("0").append(min);
-        }
-        sb.append(":");
-        if (sec > 9) {
-            sb.append(sec);
-        } else {
-            sb.append("0").append(sec);
-        }
-        return sb.toString();
     }
 
 }

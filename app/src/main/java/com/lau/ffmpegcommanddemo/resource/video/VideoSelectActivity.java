@@ -1,4 +1,4 @@
-package com.lau.ffmpegcommanddemo.videoselect;
+package com.lau.ffmpegcommanddemo.resource.video;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -15,6 +15,8 @@ import com.lau.ffmpegcommanddemo.base.BaseActivity;
 import com.lau.ffmpegcommanddemo.util.AppToastUtil;
 import com.lau.ffmpegcommanddemo.util.DensityUtil;
 import com.lau.ffmpegcommanddemo.util.PermissionCheckUtil;
+import com.lau.ffmpegcommanddemo.resource.ResourceScanManager;
+import com.lau.ffmpegcommanddemo.resource.pojo.VideoItem;
 import com.lau.ffmpegcommanddemo.widget.recyclerview.GridItemDecoration;
 
 import java.util.ArrayList;

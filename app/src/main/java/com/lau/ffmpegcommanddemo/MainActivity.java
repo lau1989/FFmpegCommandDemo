@@ -8,13 +8,16 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import com.lau.ffmpegcommanddemo.videoselect.VideoItem;
-import com.lau.ffmpegcommanddemo.videoselect.VideoSelectActivity;
+import com.lau.ffmpegcommanddemo.resource.audio.AudioSelectActivity;
+import com.lau.ffmpegcommanddemo.resource.pojo.AudioItem;
+import com.lau.ffmpegcommanddemo.resource.pojo.VideoItem;
+import com.lau.ffmpegcommanddemo.resource.video.VideoSelectActivity;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = "FFMPEG";
     private static final int REQUEST_CODE_VIDEO = 0;
+    private static final int REQUEST_CODE_AUDIO = 1;
 
     // Used to load the 'native-lib' library on application startup.
     static {
@@ -38,16 +41,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Log.i(TAG, "ffmpeg onProgress:" + progress);
     }
 
-    private TextView mInputTv;
+    private TextView mVideoInputTv;
+    private TextView mAudioInputTv;
     private TextView mOutputTv;
 
     private VideoItem mInputVideoItem;
+    private AudioItem mInputAudioItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mInputTv = findViewById(R.id.input_tv);
+        mVideoInputTv = findViewById(R.id.video_input_tv);
+        mAudioInputTv = findViewById(R.id.audio_input_tv);
         mOutputTv = findViewById(R.id.output_tv);
     }
 
@@ -60,7 +66,70 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (requestCode) {
             case REQUEST_CODE_VIDEO:
                 VideoItem videoItem = (VideoItem) data.getSerializableExtra(VideoSelectActivity.EXT_VIDEO);
-                initInputVideo(videoItem);
+                setInputVideo(videoItem);
+                break;
+            case REQUEST_CODE_AUDIO:
+                AudioItem audioItem = (AudioItem) data.getSerializableExtra(AudioSelectActivity.EXT_AUDIO);
+                setAudioItem(audioItem);
+                break;
+        }
+    }
+
+    private void setAudioItem(AudioItem audioItem) {
+        if (mInputAudioItem == null) {
+            return;
+        }
+        mInputAudioItem = audioItem;
+        mAudioInputTv.setText(audioItem.path);
+    }
+
+    private void setInputVideo(VideoItem videoItem) {
+        if (videoItem == null) {
+            return;
+        }
+        mInputVideoItem = videoItem;
+        mVideoInputTv.setText(videoItem.path);
+    }
+
+    private void setOutputPath(String outputPath) {
+        mOutputTv.setText(outputPath);
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.btn_video_input_tv:
+                startActivityForResult(new Intent(this, VideoSelectActivity.class), REQUEST_CODE_VIDEO);
+                break;
+            case R.id.btn_audio_input_tv:
+                startActivityForResult(new Intent(this, AudioSelectActivity.class), REQUEST_CODE_AUDIO);
+                break;
+            case R.id.btn_clear_tv:
+                mInputVideoItem = null;
+                mVideoInputTv.setText("");
+                mAudioInputTv.setText("");
+                mOutputTv.setText("");
+                break;
+            case R.id.item_extract_audio:
+                if (mInputVideoItem != null) {
+                    String path = getOutputVideoPath();
+                    execCmd(FfmpegUtil.getExtractAudioCmd(mInputAudioItem.path, getOutputAudioPath()));
+                    setOutputPath(path);
+                }
+                break;
+            case R.id.item_extract_video:
+                if (mInputVideoItem != null) {
+                    String path = getOutputVideoPath();
+                    execCmd(FfmpegUtil.getExtractVideoCmd(mInputVideoItem.path, path));
+                    setOutputPath(path);
+                }
+                break;
+            case R.id.item_crop:
+                if (mInputVideoItem != null) {
+                    String path = getSavePath();
+                    execCmd(FfmpegUtil.getCropVideoCmd(getSavePath(), mInputVideoItem.path, 2000, 5000));
+                    setOutputPath(path);
+                }
                 break;
         }
     }
@@ -69,50 +138,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return "/mnt/sdcard/ffmpeg_save.mp4";
     }
 
-    private void initInputVideo(VideoItem videoItem) {
-        if (videoItem == null) {
-            return;
-        }
-        mInputVideoItem = videoItem;
-        mInputTv.setText("INPUT: " + videoItem.path);
+    private String getOutputAudioPath() {
+        return "/mnt/sdcard/output_audio.aac";
     }
 
-    private void initOutputPath(String outputPath) {
-        mOutputTv.setText("OUTPUT: " + outputPath);
+    private String getOutputVideoPath() {
+        return "/mnt/sdcard/output_video.mp4";
     }
 
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.btn_clear:
-                mInputVideoItem = null;
-                mInputTv.setText("INPUT:");
-                mOutputTv.setText("OUTPUT:");
-                break;
-            case R.id.item_crop:
-                if (mInputVideoItem == null) {
-                    startActivityForResult(new Intent(this, VideoSelectActivity.class), REQUEST_CODE_VIDEO);
-                } else {
-                    cropVideo(getSavePath(), mInputVideoItem.path, 2000, 5000);
-                    initOutputPath(getSavePath());
-                }
-                break;
-        }
-    }
-
-    private void cropVideo(String outputPath, String videoPath, long startTime, long endTime) {
-        long duration = endTime - startTime;
-        CmdList cmd = new CmdList();
-        cmd.append("ffmpeg");
-        cmd.append("-y");
-        cmd.append("-ss").append(startTime / 1000).append("-t").append(duration / 1000).append("-accurate_seek");
-        cmd.append("-i").append(videoPath);
-        cmd.append("-codec").append("copy").append(outputPath);
-
-        execCropCmd(cmd, duration);
-    }
-
-    private void execCropCmd(CmdList cmd, long duration) {
+    private void execCmd(CmdList cmd) {
         String[] cmds = cmd.toArray(new String[cmd.size()]);
         String cmdLog = "";
         for (String ss : cmds) {
