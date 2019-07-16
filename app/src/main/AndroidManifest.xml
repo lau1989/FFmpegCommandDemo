@@ -23,6 +23,7 @@
 
         <activity android:name=".resource.video.VideoSelectActivity"/>
         <activity android:name=".resource.audio.AudioSelectActivity"/>
+        <activity android:name=".resource.image.ImageSelectActivity"/>
 
     </application>
 

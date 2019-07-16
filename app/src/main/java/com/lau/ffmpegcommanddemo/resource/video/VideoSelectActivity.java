@@ -70,11 +70,16 @@ public class VideoSelectActivity extends BaseActivity {
     private void doScanVideoList() {
         ResourceScanManager.INSTANCE.startScan(this, new ResourceScanManager.IVideoScanCompleteCallback() {
             @Override
-            public void scanComplete(ArrayList<VideoItem> videoList) {
+            public void scanComplete(final ArrayList<VideoItem> videoList) {
                 if (isDestroyed()) {
                     return;
                 }
-                mAdapter.setNewData(videoList);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mAdapter.setNewData(videoList);
+                    }
+                });
             }
         });
     }

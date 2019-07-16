@@ -1,11 +1,11 @@
-package com.lau.ffmpegcommanddemo.resource.audio;
+package com.lau.ffmpegcommanddemo.resource.image;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
@@ -13,7 +13,6 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.lau.ffmpegcommanddemo.R;
 import com.lau.ffmpegcommanddemo.base.BaseActivity;
 import com.lau.ffmpegcommanddemo.resource.ResourceScanManager;
-import com.lau.ffmpegcommanddemo.resource.pojo.AudioItem;
 import com.lau.ffmpegcommanddemo.util.AppToastUtil;
 import com.lau.ffmpegcommanddemo.util.DensityUtil;
 import com.lau.ffmpegcommanddemo.util.PermissionCheckUtil;
@@ -21,22 +20,22 @@ import com.lau.ffmpegcommanddemo.widget.recyclerview.GridItemDecoration;
 
 import java.util.ArrayList;
 
-public class AudioSelectActivity  extends BaseActivity {
+public class ImageSelectActivity extends BaseActivity {
 
-    public static final String EXT_AUDIO = "ext_video";
+    public static final String EXT_IMAGE = "ext_video";
     private static final int REQUEST_CODE_SD = 994;
 
     private RecyclerView mRv;
-    private AudioAdapter mAdapter;
+    private ImageAdapter mAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.audio_select_activity);
-        setTitle("音频选择");
-        mAdapter = new AudioAdapter();
+        setContentView(R.layout.image_select_activity);
+        setTitle("图片选择");
+        mAdapter = new ImageAdapter();
         mRv = findViewById(R.id.rv);
-        mRv.setLayoutManager(new LinearLayoutManager(this));
+        mRv.setLayoutManager(new GridLayoutManager(this, 3));
         GridItemDecoration decoration = new GridItemDecoration(DensityUtil.dip2px(5));
         decoration.setShowLeftRightEdge(true);
         decoration.setShowTopBottomEdge(true);
@@ -45,9 +44,9 @@ public class AudioSelectActivity  extends BaseActivity {
         mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                AudioItem audioItem = mAdapter.getItem(position);
+                String image = mAdapter.getItem(position);
                 Intent intent = new Intent();
-                intent.putExtra(EXT_AUDIO, audioItem);
+                intent.putExtra(EXT_IMAGE, image);
                 setResult(RESULT_OK, intent);
                 finish();
             }
@@ -68,16 +67,16 @@ public class AudioSelectActivity  extends BaseActivity {
     }
 
     private void doScanVideoList() {
-        ResourceScanManager.INSTANCE.startScan(this, new ResourceScanManager.IAudioScanCompleteCallback() {
+        ResourceScanManager.INSTANCE.startScan(this, new ResourceScanManager.IImageScanCompleteCallback() {
             @Override
-            public void scanComplete(final ArrayList<AudioItem> videoList) {
+            public void scanComplete(final ArrayList<String> imageList) {
                 if (isDestroyed()) {
                     return;
                 }
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        mAdapter.setNewData(videoList);
+                        mAdapter.setNewData(imageList);
                     }
                 });
             }

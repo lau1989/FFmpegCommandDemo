@@ -17,7 +17,8 @@ public enum ResourceScanManager {
 
     INSTANCE;
 
-    private static final String[] STORE_PHOTO = {MediaStore.Images.Media.DISPLAY_NAME,       //name
+    private static final String[] STORE_PHOTO = {
+            MediaStore.Images.Media.DISPLAY_NAME,       //name
             MediaStore.Images.Media.DATA,               //path
             MediaStore.Images.Media.DATE_MODIFIED,      //modified
             MediaStore.Images.Media.SIZE,               //size
@@ -41,6 +42,10 @@ public enum ResourceScanManager {
 
     public interface IVideoScanCompleteCallback {
         void scanComplete(ArrayList<VideoItem> videoList);
+    }
+
+    public interface IImageScanCompleteCallback {
+        void scanComplete(ArrayList<String> videoList);
     }
 
     public interface IAudioScanCompleteCallback {
@@ -85,6 +90,41 @@ public enum ResourceScanManager {
                 }
             }
         }).start();
+    }
+
+    public void startScan(final Context context, final IImageScanCompleteCallback callback) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                ContentResolver cr = context.getContentResolver();
+                ArrayList<String> imageItems = startImageScan(cr);
+                if (callback != null) {
+                    callback.scanComplete(imageItems);
+                }
+            }
+        }).start();
+    }
+
+    private ArrayList<String> startImageScan(ContentResolver cr) {
+        Uri imgUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+        Cursor cursor = MediaStore.Images.Media.query(cr, imgUri, STORE_PHOTO);
+        ArrayList<String> imageItems = new ArrayList<>();
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                if (mDestroy) {
+                    return imageItems;
+                }
+                String name = cursor.getString(0);
+                String path = cursor.getString(1);
+
+                if (!isFileExist(path)) {
+                    continue;
+                }
+
+                imageItems.add(path);
+            }
+        }
+        return imageItems;
     }
 
     private ArrayList<VideoItem> startVideoScan(ContentResolver cr) {

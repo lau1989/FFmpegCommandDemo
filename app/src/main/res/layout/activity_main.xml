@@ -28,7 +28,21 @@
                 android:onClick="onClick"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
-                android:text="Video Input" />
+                android:text="Video In"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/btn_video_input_tv1"
+                android:layout_width="wrap_content"
+                android:layout_height="45dp"
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/main_item_bg_selector"
+                android:gravity="center"
+                android:onClick="onClick"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:text="Video1 In"
+                android:textSize="13sp" />
 
             <TextView
                 android:id="@+id/btn_audio_input_tv"
@@ -40,7 +54,41 @@
                 android:onClick="onClick"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
-                android:text="Audio Input" />
+                android:text="Audio In"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/btn_audio_input_tv1"
+                android:layout_width="wrap_content"
+                android:layout_height="45dp"
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/main_item_bg_selector"
+                android:gravity="center"
+                android:onClick="onClick"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:text="Audio1 In"
+                android:textSize="13sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/btn_image_input_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="45dp"
+                android:background="@drawable/main_item_bg_selector"
+                android:gravity="center"
+                android:onClick="onClick"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:text="Image In"
+                android:textSize="13sp" />
 
             <TextView
                 android:id="@+id/btn_clear_tv"
@@ -52,21 +100,24 @@
                 android:onClick="onClick"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
-                android:text="Clear" />
+                android:text="Clear"
+                android:textSize="13sp" />
 
         </LinearLayout>
 
-
         <LinearLayout
+            android:id="@+id/video_input_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone"
+            tools:visibility="visible">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="VIDEO INPUT:"
+                android:text="VIDEO IN:"
                 android:textColor="#333"
                 android:textSize="12sp" />
 
@@ -79,17 +130,44 @@
 
         </LinearLayout>
 
-
         <LinearLayout
+            android:id="@+id/video_input_layout1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone"
+            tools:visibility="visible">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="AUDIO INPUT:"
+                android:text="VIDEO1 IN:"
+                android:textColor="#333"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/video1_input_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#333"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/audio_input_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="AUDIO IN:"
                 android:textColor="#333"
                 android:textSize="12sp" />
 
@@ -103,10 +181,63 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/audio_input_layout1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="AUDIO1 IN:"
+                android:textColor="#333"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/audio1_input_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#333"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/image_input_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="IMAGE IN:"
+                android:textColor="#333"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/image_input_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#333"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/output_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            tools:visibility="visible">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -126,7 +257,7 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/item_crop"
+            android:id="@+id/item_crop_video"
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:layout_marginTop="10dp"
@@ -163,6 +294,136 @@
                 android:text="Extract Audio" />
 
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/item_combine_audio_and_video"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/main_item_bg_selector"
+            android:gravity="center"
+            android:onClick="onClick"
+            android:text="Combine Audio and Video" />
+
+        <TextView
+            android:id="@+id/item_add_audio"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/main_item_bg_selector"
+            android:gravity="center"
+            android:onClick="onClick"
+            android:text="Add Audio" />
+
+        <TextView
+            android:id="@+id/item_crop_audio"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/main_item_bg_selector"
+            android:gravity="center"
+            android:onClick="onClick"
+            android:text="Crop Audio" />
+
+        <TextView
+            android:id="@+id/item_splicing_video"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/main_item_bg_selector"
+            android:gravity="center"
+            android:onClick="onClick"
+            android:text="Splicing Video" />
+
+        <TextView
+            android:id="@+id/item_splicing_audio"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/main_item_bg_selector"
+            android:gravity="center"
+            android:onClick="onClick"
+            android:text="Splicing Audio" />
+
+        <TextView
+            android:id="@+id/item_crop_video_frame"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/main_item_bg_selector"
+            android:gravity="center"
+            android:onClick="onClick"
+            android:text="Crop Video Size" />
+
+        <TextView
+            android:id="@+id/item_combine_video_frame"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/main_item_bg_selector"
+            android:gravity="center"
+            android:onClick="onClick"
+            android:text="Crop Video Size" />
+
+        <TextView
+            android:id="@+id/item_extract_video_frame"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/main_item_bg_selector"
+            android:gravity="center"
+            android:onClick="onClick"
+            android:text="Extract Video Frame" />
+
+        <TextView
+            android:id="@+id/item_combine_frame_to_video"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/main_item_bg_selector"
+            android:gravity="center"
+            android:onClick="onClick"
+            android:text="Combine Frame to Video" />
+
+        <TextView
+            android:id="@+id/item_add_watermark"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/main_item_bg_selector"
+            android:gravity="center"
+            android:onClick="onClick"
+            android:text="Add Watermark" />
+
+        <TextView
+            android:id="@+id/item_remove_watermark"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/main_item_bg_selector"
+            android:gravity="center"
+            android:onClick="onClick"
+            android:text="Remove Watermark" />
+
+        <TextView
+            android:id="@+id/item_add_text"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/main_item_bg_selector"
+            android:gravity="center"
+            android:onClick="onClick"
+            android:text="Add Text" />
+
+        <TextView
+            android:id="@+id/item_scale_video"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/main_item_bg_selector"
+            android:gravity="center"
+            android:onClick="onClick"
+            android:text="Scale Video" />
 
     </LinearLayout>
 

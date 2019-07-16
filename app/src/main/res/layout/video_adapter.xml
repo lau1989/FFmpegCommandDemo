@@ -1,31 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/container_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:layout_height="match_parent">
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/cover_sdv"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:background="@drawable/video_select_duration_bg_shape"
-        android:layout_alignBottom="@+id/cover_sdv"/>
+        android:layout_alignBottom="@+id/cover_sdv"
+        android:background="@drawable/video_select_duration_bg_shape" />
 
     <TextView
         android:id="@+id/video_size_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/cover_sdv"
-        android:paddingTop="5dp"
         android:paddingLeft="5dp"
+        android:paddingTop="5dp"
         android:paddingBottom="3dp"
         android:textColor="#fff"
         android:textSize="12sp"
